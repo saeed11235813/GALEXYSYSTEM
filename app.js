@@ -19,7 +19,7 @@
       atDesks: 'At desks', walking: 'Walking', chatting: 'Chatting', onBreak: 'On break',
       zoomIn: 'Zoom in', zoomOut: 'Zoom out', fit: 'Show whole floor', random: 'Visit a random agent', close: 'Close profile',
       toDesks: '🪑 All to desks', toDesksTip: 'Send every agent back to their desk', freeTime: '🎉 Free time', freeTimeTip: 'Let every agent take a break',
-      source: 'View source file', mdnote: 'Full agent prompt', credit: 'Agents from',
+      source: 'View source file', mdnote: 'Full agent prompt', mdnoteFa: 'Full agent prompt', showOrig: 'Show original', showFa: 'Show Persian', credit: 'Agents from',
       follow: 'Follow on the floor', unfollow: 'Stop following', divisions: 'Divisions', hide: 'Hide', other: 'فارسی',
       sub: (n, d) => `${n} specialists across ${d} divisions, at work right now.`,
       empty: (q) => `No agent matches “${q}”. Try a skill like “seo” or “unity”.`,
@@ -38,7 +38,7 @@
       atDesks: 'پشت میز', walking: 'در راه', chatting: 'گپ', onBreak: 'استراحت',
       zoomIn: 'بزرگ‌نمایی', zoomOut: 'کوچک‌نمایی', fit: 'نمایش کل طبقه', random: 'دیدن یک ایجنت تصادفی', close: 'بستن پروفایل',
       toDesks: '🪑 همه سر میز', toDesksTip: 'همه‌ی ایجنت‌ها برگردند سر میز کارشان', freeTime: '🎉 وقت آزاد', freeTimeTip: 'همه‌ی ایجنت‌ها آزاد شوند و استراحت کنند',
-      source: 'مشاهده‌ی فایل منبع', mdnote: 'متن کامل ایجنت (به زبان اصلی)', credit: 'ایجنت‌ها از',
+      source: 'مشاهده‌ی فایل منبع', mdnote: 'متن کامل ایجنت (به زبان اصلی)', mdnoteFa: 'متن کامل ایجنت (ترجمه‌ی فارسی)', showOrig: 'نمایش متن اصلی', showFa: 'نمایش ترجمه‌ی فارسی', credit: 'ایجنت‌ها از',
       follow: 'دنبال کردن در دفتر', unfollow: 'دنبال نکن', divisions: 'دپارتمان‌ها', hide: 'بستن', other: 'English',
       sub: (n, d) => `${n} متخصص در ${d} دپارتمان، همین حالا مشغول کار.`,
       empty: (q) => `ایجنتی با «${q}» پیدا نشد. یک مهارت مثل «seo» یا «unity» را امتحان کنید.`,
@@ -66,6 +66,21 @@
     return /^fa/i.test(navigator.language || '') ? 'fa' : 'en';
   })();
   const L = (k) => I18N[lang][k];
+  // Persian agent texts (data/fa/*): loaded on demand, every lookup falls back to the English original
+  let faMeta = null; const faBodies = {}; let showOrig = false;
+  const fm = (a) => (lang === 'fa' && faMeta && faMeta[a.id]) || null;
+  const aName = (a) => (fm(a) && fm(a).name) || a.name;
+  const aVibe = (a) => (fm(a) && fm(a).vibe) || (lang === 'fa' ? '' : a.vibe);
+  const aDesc = (a) => (fm(a) && fm(a).description) || a.description;
+  function loadFaMeta() {
+    if (faMeta !== null) return Promise.resolve();
+    return fetch('data/fa/meta.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => { faMeta = m; });
+  }
+  function loadFaBody(a) {
+    const dv = a.division;
+    if (!faBodies[dv]) faBodies[dv] = fetch(`data/fa/${dv}.json`).then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+    return faBodies[dv].then((m) => m[a.id] || null);
+  }
   const divLabel = (dv) => (lang === 'fa' ? FA_DIV[dv.key] || dv.label : dv.label);
   const num = (n) => (lang === 'fa' ? Number(n).toLocaleString('fa-IR') : String(n));
 
@@ -346,7 +361,7 @@
     c.bubble = text; c.bt = 2.8 + Math.min(text.length, 90) * 0.04;
   }
   function workLine(c) {
-    if (lang === 'en' && c.a.vibe && Math.random() < 0.55) return c.a.vibe;
+    if (aVibe(c.a) && Math.random() < 0.55) return aVibe(c.a);
     return pick(L('quips'));
   }
   function route(c, tx, ty, ta) {
@@ -388,7 +403,7 @@
     else if (c.next === 'cooler') { c.front = true; c.right = true; say(c, pick(L('cooler'))); }
     else if (c.next === 'chat') {
       c.front = false; c.right = false; c.timer += 2;
-      say(c, lang === 'en' && c.a.vibe && Math.random() < 0.5 ? c.a.vibe : pick(L('chat')), true);
+      say(c, aVibe(c.a) && Math.random() < 0.5 ? aVibe(c.a) : pick(L('chat')), true);
       if (c.with && c.with.state === 'work') c.with.reply = 1.8;
     } else { c.front = Math.random() < 0.5; c.right = Math.random() < 0.5; }
   }
@@ -563,7 +578,7 @@
     const [x, y0] = headScreen(c);
     const y = y0 - (c.bubble && cam.z > 0.5 ? 0 : 0) + 4;
     ctx.font = '600 13px "Figtree", "Vazirmatn", system-ui, sans-serif';
-    const text = `${c.a.emoji} ${c.a.name}`;
+    const text = `${c.a.emoji} ${aName(c.a)}`;
     const w = ctx.measureText(text).width + 20;
     const by = c.bubble && cam.z > 0.5 ? y + 34 * cam.z + 18 : y - 30;
     rr(x - w / 2, by, w, 24, 12, c.room.color);
@@ -653,31 +668,49 @@
 
   // ---------- dossier ----------
   const drawer = $('drawer');
-  function select(c) {
+  function select(c, keepCam) {
     selected = c; follow = c; updateFollowBtn();
     const a = c.a, dv = c.room.dv;
     $('d-emoji').textContent = a.emoji;
     $('d-emoji').style.background = shade(dv.color, 0.8);
-    $('d-name').textContent = a.name;
+    $('d-name').textContent = aName(a);
     $('d-div').innerHTML = '';
     const dot = document.createElement('i'); dot.className = 'dot'; dot.style.background = dv.color; dot.style.marginRight = '0';
     $('d-div').append(dot, document.createTextNode(divLabel(dv)));
-    $('d-vibe').textContent = a.vibe || '';
-    $('d-vibe').hidden = !a.vibe;
-    $('d-desc').textContent = a.description;
+    $('d-vibe').textContent = aVibe(a) || '';
+    $('d-vibe').hidden = !aVibe(a);
+    $('d-desc').textContent = aDesc(a);
     $('d-src').href = REPO + a.path.split('/').map(encodeURIComponent).join('/');
     const md = $('d-md');
-    if (window.marked && window.DOMPurify) md.innerHTML = DOMPurify.sanitize(marked.parse(a.body));
-    else { md.innerHTML = ''; const pre = document.createElement('pre'); pre.style.whiteSpace = 'pre-wrap'; pre.textContent = a.body; md.append(pre); }
-    md.querySelectorAll('a').forEach((l) => { l.target = '_blank'; l.rel = 'noopener'; });
+    renderBody(c);
     drawer.querySelector('.dbody').scrollTop = 0;
     drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
-    if (c.state === 'work') say(c, `${L('hi')} ${a.emoji}`, true);
+    if (!keepCam && c.state === 'work') say(c, `${L('hi')} ${a.emoji}`, true);
     try { history.replaceState(null, '', '#' + a.id); } catch (_) { /* sandboxed */ }
     const [ix, iy] = iso(c.x, c.y);
     const z = Math.max(cam.z, 1.5);
     const offX = Wd > 720 ? 230 / z : 0, offY = Wd > 720 ? 20 / z : Hd * 0.27 / z;
-    flyTo({ x: ix + offX, y: iy - offY, z }, 0.9);
+    if (!keepCam) flyTo({ x: ix + offX, y: iy - offY, z }, 0.9);
+  }
+  function renderBody(c) {
+    const a = c.a, md = $('d-md'), btn = $('d-orig');
+    const paint = (text, rtl) => {
+      if (c !== selected) return;
+      md.dir = rtl ? 'rtl' : 'ltr';
+      if (window.marked && window.DOMPurify) md.innerHTML = DOMPurify.sanitize(marked.parse(text));
+      else { md.innerHTML = ''; const pre = document.createElement('pre'); pre.style.whiteSpace = 'pre-wrap'; pre.textContent = text; md.append(pre); }
+      md.querySelectorAll('a').forEach((l) => { l.target = '_blank'; l.rel = 'noopener'; });
+    };
+    btn.hidden = true;
+    if (lang !== 'fa') { paint(a.body, false); return; }
+    paint(a.body, false);
+    loadFaBody(a).then((fa) => {
+      if (!fa || c !== selected) return;
+      btn.hidden = false;
+      const apply = () => { paint(showOrig ? a.body : fa, !showOrig); btn.textContent = showOrig ? L('showFa') : L('showOrig'); $('d-md-note').textContent = showOrig ? L('mdnote') : L('mdnoteFa'); };
+      btn.onclick = () => { showOrig = !showOrig; apply(); };
+      apply();
+    });
   }
   function closeDrawer() {
     selected = null; follow = null;
@@ -714,12 +747,12 @@
     const res = s.split(/\s+/).map((t) => new RegExp('(^|[^a-z0-9])' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'));
     const scored = [];
     for (const c of chars) {
-      const a = c.a, name = a.name.toLowerCase();
-      const hay = `${name} ${a.description} ${a.vibe} ${c.room.dv.label} ${FA_DIV[c.room.dv.key] || ''}`.toLowerCase();
+      const a = c.a, name = (a.name + ' ' + aName(a)).toLowerCase();
+      const hay = `${name} ${a.description} ${aDesc(a)} ${a.vibe} ${aVibe(a)} ${c.room.dv.label} ${FA_DIV[c.room.dv.key] || ''}`.toLowerCase();
       if (!res.every((re) => re.test(hay))) continue;
       scored.push([res.every((re) => re.test(name)) ? 0 : 1, c]);
     }
-    scored.sort((x, y) => x[0] - y[0] || x[1].a.name.localeCompare(y[1].a.name));
+    scored.sort((x, y) => x[0] - y[0] || aName(x[1].a).localeCompare(aName(y[1].a), lang));
     filterSet = new Set(scored.map((x) => x[1]));
     list.innerHTML = '';
     if (!scored.length) { const p = document.createElement('div'); p.className = 'empty'; p.textContent = L('empty')(q.value.trim()); list.append(p); return; }
@@ -728,7 +761,7 @@
       b.setAttribute('role', 'listitem');
       b.innerHTML = '<span class="em"></span><span class="nm"><span></span><small></small></span><span class="sw"></span>';
       b.querySelector('.em').textContent = c.a.emoji;
-      b.querySelector('.nm span').textContent = c.a.name;
+      b.querySelector('.nm span').textContent = aName(c.a);
       b.querySelector('.nm small').textContent = divLabel(c.room.dv);
       b.querySelector('.sw').style.background = c.room.color;
       b.onclick = () => select(c);
@@ -761,6 +794,8 @@
     try { localStorage.setItem('agency-hq-lang', lang); } catch (_) { /* storage blocked */ }
     for (const c of chars) if (c.bubble) { c.bubble = null; bubbleCount--; }
     applyLang();
+    if (lang === 'fa') loadFaMeta().then(() => { applyLang(); if (selected) select(selected, true); });
+    else if (selected) select(selected, true);
   };
 
   // ---------- stats ----------
@@ -810,6 +845,7 @@
       build(data);
       applyLang();
       renderDivisions();
+      if (lang === 'fa') loadFaMeta().then(() => { applyLang(); if (selected) select(selected, true); });
       $('loading').remove();
       Object.assign(cam, fitTo(boundsOf(-2, -2, world.w + 4, world.d + 4), 20));
       const deep = byId.get(decodeURIComponent(location.hash.slice(1)));
