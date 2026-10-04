@@ -35,6 +35,7 @@ for a in agents:
     ok = found == list(range(n)) and abs(h_src - h_out) <= max(1, h_src // 10) and len(txt) > 0.3 * len(src)
     if not ok:
         bad.append((a["id"], n, len(found), h_src, h_out, len(src), len(txt))); continue
+    txt = txt.replace("\ufffd", "\\uFFFD")
     txt = PH.sub(lambda m: "\n" + codes[a["id"]][int(m.group(1))] + "\n", txt)
     byDiv.setdefault(a["division"], {})[a["id"]] = txt
 for d, v in byDiv.items():
