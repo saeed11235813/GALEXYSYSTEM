@@ -6,7 +6,7 @@
 <title>Agency HQ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Vazirmatn:wght@400;500;600;700;800&display=swap">
 <style>
 /* Layout: full-bleed isometric office floor on canvas; frosted panels pinned to the corners; agent dossier slides in from the right (bottom sheet on phones). */
 :root {
@@ -19,8 +19,8 @@
   --line: #CCD6DF;
   --accent: #2B55D9;
   --chip: #E7EDF2;
-  --f-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
-  --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-display: "Bricolage Grotesque", "Vazirmatn", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Figtree", "Vazirmatn", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --r: 14px;
   color-scheme: light;
@@ -67,13 +67,13 @@ h1 {
 .sub { margin: 0; color: var(--muted); }
 .search { position: relative; }
 .search input {
-  width: 100%; padding: 10px 12px 10px 34px; border-radius: 10px;
+  width: 100%; padding-block: 10px; padding-inline: 34px 12px; border-radius: 10px;
   border: 1px solid var(--line); background: var(--panel-solid); color: var(--ink);
   font: 500 14px var(--f-body);
 }
 .search input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-.kbd { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font: 500 11px var(--f-mono); color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+.search svg { position: absolute; inset-inline-start: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.kbd { position: absolute; inset-inline-end: 10px; top: 50%; transform: translateY(-50%); font: 500 11px var(--f-mono); color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
 
 .list { overflow-y: auto; min-height: 0; margin: 0 -8px; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }
 .list button {
@@ -89,6 +89,13 @@ h1 {
 .list .nm small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 400; overflow: hidden; text-overflow: ellipsis; }
 .empty { color: var(--muted); padding: 8px; }
 .toggle { display: none; }
+.hbtns { position: absolute; top: 12px; inset-inline-end: 12px; display: flex; gap: 6px; }
+.hbtns button { border: 1px solid var(--line); background: var(--panel-solid); color: var(--ink); border-radius: 8px; padding: 5px 9px; font: 600 12px var(--f-body); cursor: pointer; }
+.hbtns button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.mdnote { font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+html[lang="fa"] .eyebrow, html[lang="fa"] .stat span, html[lang="fa"] .chip, html[lang="fa"] .mdnote { letter-spacing: 0; font-family: var(--f-body); }
+html[lang="fa"] h1 { letter-spacing: 0; }
+html[lang="fa"] .sub, html[lang="fa"] .list button, html[lang="fa"] .modes button { font-family: "Vazirmatn", var(--f-body); }
 
 /* Live floor stats */
 .stats {
@@ -111,9 +118,21 @@ h1 {
 }
 .controls button:hover, .controls button:focus-visible { background: var(--chip); outline: none; }
 
+/* Floor commands */
+.modes {
+  right: 16px; bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  display: flex; gap: 4px; padding: 5px;
+}
+.modes button {
+  border: 0; background: transparent; color: var(--ink); cursor: pointer;
+  font: 600 13.5px var(--f-body); padding: 9px 12px; border-radius: 9px; white-space: nowrap;
+}
+.modes button:hover, .modes button:focus-visible { background: var(--chip); outline: none; }
+.modes button[aria-pressed="true"] { background: var(--ink); color: var(--panel-solid); }
+
 /* Agent dossier */
 .drawer {
-  top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px; bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px; bottom: calc(136px + env(safe-area-inset-bottom, 0px));
   width: min(440px, calc(100% - 32px));
   display: flex; flex-direction: column; overflow: hidden;
   transform: translateX(calc(100% + 24px)); transition: transform .35s cubic-bezier(.2,.8,.2,1);
@@ -138,12 +157,12 @@ h1 {
 .md { border-top: 1px solid var(--line); padding-top: 6px; font-size: 14px; line-height: 1.6; }
 .md h1, .md h2, .md h3 { font-family: var(--f-display); line-height: 1.2; margin: 1.3em 0 .4em; text-wrap: balance; }
 .md h1 { font-size: 20px; } .md h2 { font-size: 17px; } .md h3 { font-size: 15px; }
-.md p, .md ul, .md ol { margin: .5em 0; } .md ul, .md ol { padding-left: 1.3em; }
+.md p, .md ul, .md ol { margin: .5em 0; } .md ul, .md ol { padding-inline-start: 1.3em; }
 .md code { font: 12.5px var(--f-mono); background: var(--chip); padding: 1px 4px; border-radius: 4px; }
 .md pre { background: var(--chip); padding: 10px 12px; border-radius: 8px; overflow-x: auto; }
 .md pre code { background: none; padding: 0; }
 .md table { border-collapse: collapse; display: block; overflow-x: auto; font-size: 13px; }
-.md th, .md td { border: 1px solid var(--line); padding: 5px 8px; text-align: left; }
+.md th, .md td { border: 1px solid var(--line); padding: 5px 8px; text-align: start; }
 .md a { color: var(--accent); }
 .md blockquote { margin: .6em 0; padding-left: 12px; border-left: 3px solid var(--line); color: var(--muted); }
 
@@ -156,14 +175,16 @@ h1 {
   .hud { right: 16px; width: auto; max-height: calc(100% - 120px); padding: 12px 14px; gap: 10px; }
   h1 { font-size: 24px; }
   .sub { display: none; }
-  .toggle { display: block; position: absolute; top: 12px; right: 12px; border: 1px solid var(--line); background: var(--panel-solid); color: var(--ink); border-radius: 8px; padding: 6px 10px; font: 600 12px var(--f-body); cursor: pointer; }
+  .toggle { display: block; }
   .hud:not(.expanded) .list { display: none; }
   .hud.searching .list { display: flex; max-height: 40vh; }
-  .stats { gap: 12px; padding: 8px 12px; right: 112px; justify-content: space-between; }
+  .stats { gap: 10px; padding: 8px 12px; right: 148px; justify-content: space-between; }
   .stat b { font-size: 15px; }
   .stat span { font-size: 9px; }
   .controls button { width: 32px; height: 32px; }
   .controls .hide-sm { display: none; }
+  .modes { bottom: calc(68px + env(safe-area-inset-bottom, 0px)); }
+  .modes button { font-size: 12.5px; padding: 8px 10px; }
   .drawer { top: auto; bottom: 0; right: 0; left: 0; width: 100%; height: 72%; border-radius: var(--r) var(--r) 0 0; transform: translateY(105%); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 4; }
   .credit { display: none; }
 }
@@ -172,61 +193,67 @@ h1 {
 </head>
 <body>
 <canvas id="world" aria-label="Isometric office floor with every agent of The Agency at work. Use the division list or search to find an agent."></canvas>
-<div class="loading" id="loading">Unlocking the office…</div>
+<div class="loading" id="loading" data-i18n="loading">Unlocking the office…</div>
 
 <section class="panel hud" id="hud" aria-label="Agency directory">
   <div>
-    <div class="eyebrow">The Agency · Floor 1</div>
-    <h1>Agency HQ</h1>
+    <div class="eyebrow" data-i18n="eyebrow">The Agency · Floor 1</div>
+    <h1 data-i18n="title">Agency HQ</h1>
     <p class="sub" id="sub">Every specialist, at their desk.</p>
   </div>
-  <button class="toggle" id="toggle" aria-expanded="false" aria-controls="list">Divisions</button>
+  <div class="hbtns"><button class="lang" id="lang" lang="fa">فارسی</button><button class="toggle" id="toggle" aria-expanded="false" aria-controls="list">Divisions</button></div>
   <div class="search">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-    <input id="q" type="search" placeholder="Find an agent or skill" autocomplete="off" aria-label="Search agents">
+    <input id="q" type="search" placeholder="Find an agent or skill" autocomplete="off" aria-label="Search agents" data-i18n-ph="search">
     <span class="kbd" aria-hidden="true">/</span>
   </div>
   <div class="list" id="list" role="list"></div>
 </section>
 
 <section class="panel stats" aria-live="off" aria-label="Floor activity">
-  <div class="stat"><b id="s-work">0</b><span><i class="dot" style="background:#2B55D9"></i>At desks</span></div>
-  <div class="stat"><b id="s-walk">0</b><span><i class="dot" style="background:#E0892B"></i>Walking</span></div>
-  <div class="stat"><b id="s-chat">0</b><span><i class="dot" style="background:#C2449B"></i>Chatting</span></div>
-  <div class="stat"><b id="s-break">0</b><span><i class="dot" style="background:#3E9B6A"></i>On break</span></div>
+  <div class="stat"><b id="s-work">0</b><span><i class="dot" style="background:#2B55D9"></i><span data-i18n="atDesks">At desks</span></span></div>
+  <div class="stat"><b id="s-walk">0</b><span><i class="dot" style="background:#E0892B"></i><span data-i18n="walking">Walking</span></span></div>
+  <div class="stat"><b id="s-chat">0</b><span><i class="dot" style="background:#C2449B"></i><span data-i18n="chatting">Chatting</span></span></div>
+  <div class="stat"><b id="s-break">0</b><span><i class="dot" style="background:#3E9B6A"></i><span data-i18n="onBreak">On break</span></span></div>
 </section>
 
 <section class="panel controls" aria-label="Camera">
-  <button id="zin" title="Zoom in" aria-label="Zoom in">+</button>
-  <button id="zout" title="Zoom out" aria-label="Zoom out">−</button>
-  <button id="fit" class="hide-sm" title="Show whole floor" aria-label="Show whole floor">
+  <button id="zin" title="Zoom in" aria-label="Zoom in" data-i18n-title="zoomIn">+</button>
+  <button id="zout" title="Zoom out" aria-label="Zoom out" data-i18n-title="zoomOut">−</button>
+  <button id="fit" class="hide-sm" title="Show whole floor" aria-label="Show whole floor" data-i18n-title="fit">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
   </button>
-  <button id="rnd" title="Visit a random agent" aria-label="Visit a random agent">
+  <button id="rnd" title="Visit a random agent" aria-label="Visit a random agent" data-i18n-title="random">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.2" fill="currentColor"/><circle cx="15" cy="15" r="1.2" fill="currentColor"/><circle cx="15" cy="9" r="1.2" fill="currentColor"/><circle cx="9" cy="15" r="1.2" fill="currentColor"/></svg>
   </button>
+</section>
+
+<section class="panel modes" aria-label="Floor commands">
+  <button data-mode="desk" aria-pressed="false" data-i18n="toDesks" data-i18n-title="toDesksTip" title="Send every agent back to their desk">🪑 All to desks</button>
+  <button data-mode="free" aria-pressed="false" data-i18n="freeTime" data-i18n-title="freeTimeTip" title="Let every agent take a break">🎉 Free time</button>
 </section>
 
 <aside class="panel drawer" id="drawer" aria-label="Agent profile" aria-hidden="true">
   <div class="dhead">
     <div class="avatar" id="d-emoji"></div>
     <div style="min-width:0">
-      <h2 id="d-name"></h2>
+      <h2 id="d-name" dir="auto"></h2>
       <span class="chip" id="d-div"></span>
     </div>
-    <button class="close" id="d-close" aria-label="Close profile">×</button>
+    <button class="close" id="d-close" aria-label="Close profile" data-i18n-title="close">×</button>
   </div>
   <div class="dbody">
-    <p class="vibe" id="d-vibe"></p>
-    <p class="desc" id="d-desc"></p>
+    <p class="vibe" id="d-vibe" dir="auto"></p>
+    <p class="desc" id="d-desc" dir="auto"></p>
     <div class="dactions">
-      <a class="primary" id="d-src" href="#" target="_blank" rel="noopener">View source file</a>
+      <a class="primary" id="d-src" href="#" target="_blank" rel="noopener" data-i18n="source">View source file</a>
       <button id="d-follow" type="button">Stop following</button>
     </div>
-    <div class="md" id="d-md"></div>
+    <div class="mdnote" data-i18n="mdnote">Full agent prompt</div>
+    <div class="md" id="d-md" dir="ltr"></div>
   </div>
 </aside>
-<div class="credit">Agents from <a href="https://github.com/msitarzewski/agency-agents" target="_blank" rel="noopener">msitarzewski/agency-agents</a> · MIT</div>
+<div class="credit"><span data-i18n="credit">Agents from</span> <a href="https://github.com/msitarzewski/agency-agents" target="_blank" rel="noopener">msitarzewski/agency-agents</a> · MIT</div>
 
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>

@@ -6,6 +6,8 @@ An animated isometric office for **[The Agency](https://github.com/msitarzewski/
 - **Living characters**: they type at their laptops, walk to the coffee machine or water cooler, visit colleagues to chat, and show speech bubbles drawn from their own `vibe` line
 - **Click any character** to open their profile: vibe, description, the full agent prompt rendered from Markdown, and a link to the source file
 - **Search** by name or skill (`/` focuses the search box), jump to any division, or visit a random agent
+- **Floor commands**: “All to desks” sends everyone back to their desk; “Free time” lets everyone loose. Press the active button again to return to the normal routine
+- **English and Persian (فارسی)** interface with full right-to-left layout; switch with the language button, or open `index.html#fa`
 - Drag to pan, scroll or pinch to zoom; works on phones; respects `prefers-reduced-motion`
 - Deep links: `index.html#engineering__engineering-frontend-developer` opens that agent
 

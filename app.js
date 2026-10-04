@@ -12,11 +12,62 @@
   const HAIR = ['#2A1E17', '#4A2F1E', '#7A4A27', '#C98B3F', '#E3C27A', '#1C1C24', '#8E3B2C', '#9AA3AE', '#5B3A68'];
   const PANTS = ['#2E3A4F', '#3B3F4A', '#4A3C33', '#26344A', '#55606F', '#1F2633'];
   const DESK = '#E8DAC4', FLOOR_GROUND = '#E4EAEE', WALL = '#F3F5F7';
-  const QUIPS = ['Shipping it 🚀', 'LGTM ✅', 'One more test…', 'In the zone 🎧', 'Standup in 5?',
-    'Writing docs 📝', 'Inbox zero!', 'Pairing anyone?', 'Checking metrics 📈', 'Brainstorming 💡',
-    'Deploying to staging', 'Who broke main?', 'Ticket closed 🎉', 'Need a review here'];
-  const BREAK_LINES = { coffee: ['☕ Refuel time', 'Espresso, double.', 'Who took the oat milk?', 'Coffee #3 today'],
-    cooler: ['💧 Hydrate', 'Did you see the roadmap?', 'Nice weather out', 'Stretch break'] };
+  // ---------- language ----------
+  const I18N = {
+    en: {
+      loading: 'Unlocking the office…', eyebrow: 'The Agency · Floor 1', title: 'Agency HQ', search: 'Find an agent or skill',
+      atDesks: 'At desks', walking: 'Walking', chatting: 'Chatting', onBreak: 'On break',
+      zoomIn: 'Zoom in', zoomOut: 'Zoom out', fit: 'Show whole floor', random: 'Visit a random agent', close: 'Close profile',
+      toDesks: '🪑 All to desks', toDesksTip: 'Send every agent back to their desk', freeTime: '🎉 Free time', freeTimeTip: 'Let every agent take a break',
+      source: 'View source file', mdnote: 'Full agent prompt', credit: 'Agents from',
+      follow: 'Follow on the floor', unfollow: 'Stop following', divisions: 'Divisions', hide: 'Hide', other: 'فارسی',
+      sub: (n, d) => `${n} specialists across ${d} divisions, at work right now.`,
+      empty: (q) => `No agent matches “${q}”. Try a skill like “seo” or “unity”.`,
+      loadErr: (m) => `Could not load the agent roster (${m}). Reload the page to try again.`,
+      hi: 'Hi! 👋',
+      quips: ['Shipping it 🚀', 'LGTM ✅', 'One more test…', 'In the zone 🎧', 'Standup in 5?', 'Writing docs 📝', 'Inbox zero!', 'Pairing anyone?', 'Checking metrics 📈', 'Brainstorming 💡', 'Deploying to staging', 'Who broke main?', 'Ticket closed 🎉', 'Need a review here'],
+      coffee: ['☕ Refuel time', 'Espresso, double.', 'Who took the oat milk?', 'Coffee #3 today'],
+      cooler: ['💧 Hydrate', 'Did you see the roadmap?', 'Nice weather out', 'Stretch break'],
+      chat: ['Got a sec?', 'Quick sync?', 'Can you look at this?', 'Lunch later?', 'Nice work on that!'],
+      reply: ['Sure, one sec', 'On it 👍', 'Ha, good one', 'Send me the link', 'After this commit'],
+      backToDesk: ['On my way!', 'Back to work 💼', 'Coming!', 'Right away'],
+      breakTime: ['Break time! 🎉', 'Finally ☕', 'See you at the cooler', 'Stretch time 🙆'],
+    },
+    fa: {
+      loading: 'در حال باز کردن دفتر…', eyebrow: 'آژانس · طبقه ۱', title: 'دفتر مرکزی آژانس', search: 'جستجوی ایجنت یا مهارت',
+      atDesks: 'پشت میز', walking: 'در راه', chatting: 'گپ', onBreak: 'استراحت',
+      zoomIn: 'بزرگ‌نمایی', zoomOut: 'کوچک‌نمایی', fit: 'نمایش کل طبقه', random: 'دیدن یک ایجنت تصادفی', close: 'بستن پروفایل',
+      toDesks: '🪑 همه سر میز', toDesksTip: 'همه‌ی ایجنت‌ها برگردند سر میز کارشان', freeTime: '🎉 وقت آزاد', freeTimeTip: 'همه‌ی ایجنت‌ها آزاد شوند و استراحت کنند',
+      source: 'مشاهده‌ی فایل منبع', mdnote: 'متن کامل ایجنت (به زبان اصلی)', credit: 'ایجنت‌ها از',
+      follow: 'دنبال کردن در دفتر', unfollow: 'دنبال نکن', divisions: 'دپارتمان‌ها', hide: 'بستن', other: 'English',
+      sub: (n, d) => `${n} متخصص در ${d} دپارتمان، همین حالا مشغول کار.`,
+      empty: (q) => `ایجنتی با «${q}» پیدا نشد. یک مهارت مثل «seo» یا «unity» را امتحان کنید.`,
+      loadErr: (m) => `فهرست ایجنت‌ها بارگذاری نشد (${m}). صفحه را دوباره بارگذاری کنید.`,
+      hi: 'سلام! 👋',
+      quips: ['دارم منتشرش می‌کنم 🚀', 'تأیید شد ✅', 'یه تست دیگه…', 'غرق کارم 🎧', 'جلسه‌ی روزانه کِیه؟', 'دارم مستندات می‌نویسم 📝', 'صندوق ایمیل خالی شد!', 'کسی پایه‌ی کار گروهیه؟', 'دارم آمار رو چک می‌کنم 📈', 'یه ایده دارم 💡', 'دارم می‌برمش روی سرور تست', 'کی برنچ اصلی رو خراب کرد؟', 'تیکت بسته شد 🎉', 'یکی اینو بررسی کنه'],
+      coffee: ['☕ وقت قهوه‌ست', 'یه اسپرسوی دوبل لطفاً', 'کی شیر رو تموم کرد؟', 'قهوه‌ی سوم امروز'],
+      cooler: ['💧 یه لیوان آب', 'نقشه‌ی راه جدید رو دیدی؟', 'هوا امروز عالیه', 'یه کش و قوس بدیم'],
+      chat: ['یه لحظه وقت داری؟', 'یه هماهنگی سریع؟', 'می‌شه اینو ببینی؟', 'ناهار بریم؟', 'کارت عالی بود!'],
+      reply: ['حتماً، یه لحظه', 'الان انجامش می‌دم 👍', 'هه، خوب بود', 'لینکشو بفرست', 'بعد از این کامیت'],
+      backToDesk: ['دارم میام!', 'برگردیم سر کار 💼', 'اومدم!', 'همین الان'],
+      breakTime: ['وقت استراحته! 🎉', 'بالاخره ☕', 'دم آب‌سردکن می‌بینمت', 'یه کم نرمش 🙆'],
+    },
+  };
+  const FA_DIV = {
+    academic: 'آکادمیک', design: 'طراحی', engineering: 'مهندسی', finance: 'مالی', 'game-development': 'توسعه‌ی بازی',
+    gis: 'GIS و نقشه', healthcare: 'سلامت', marketing: 'بازاریابی', 'paid-media': 'تبلیغات پولی', product: 'محصول',
+    'project-management': 'مدیریت پروژه', research: 'پژوهش', sales: 'فروش', security: 'امنیت',
+    'spatial-computing': 'محاسبات فضایی', specialized: 'تخصصی', support: 'پشتیبانی', testing: 'تست و کیفیت',
+  };
+  let lang = (() => {
+    if (location.hash === '#fa') return 'fa';
+    if (location.hash === '#en') return 'en';
+    try { const v = localStorage.getItem('agency-hq-lang'); if (v === 'fa' || v === 'en') return v; } catch (_) { /* storage blocked */ }
+    return /^fa/i.test(navigator.language || '') ? 'fa' : 'en';
+  })();
+  const L = (k) => I18N[lang][k];
+  const divLabel = (dv) => (lang === 'fa' ? FA_DIV[dv.key] || dv.label : dv.label);
+  const num = (n) => (lang === 'fa' ? Number(n).toLocaleString('fa-IR') : String(n));
 
   const pctx = document.createElement('canvas').getContext('2d');
   const rgbCache = new Map(), shadeCache = new Map();
@@ -295,8 +346,8 @@
     c.bubble = text; c.bt = 2.8 + Math.min(text.length, 90) * 0.04;
   }
   function workLine(c) {
-    if (c.a.vibe && Math.random() < 0.55) return c.a.vibe;
-    return pick(QUIPS);
+    if (lang === 'en' && c.a.vibe && Math.random() < 0.55) return c.a.vibe;
+    return pick(L('quips'));
   }
   function route(c, tx, ty, ta) {
     const r = c.room, p = [[c.x, c.aisle]];
@@ -326,18 +377,23 @@
   }
   function goBack(c) { route(c, c.seat[0], c.seat[1], c.seatAisle); c.state = 'walk'; c.next = 'sit'; }
   function arrive(c) {
-    if (c.next === 'sit') { c.state = 'work'; c.front = true; c.right = false; c.timer = 10 + Math.random() * 28; return; }
+    if (c.next === 'sit') {
+      c.state = 'work'; c.front = true; c.right = false;
+      c.timer = mode === 'free' ? 0.5 + Math.random() * 2 : 10 + Math.random() * 28;
+      return;
+    }
+    if (mode === 'desk') { goBack(c); return; }
     c.state = 'stay'; c.timer = 3.5 + Math.random() * 5;
-    if (c.next === 'coffee') { c.front = false; c.right = true; say(c, pick(BREAK_LINES.coffee)); }
-    else if (c.next === 'cooler') { c.front = true; c.right = true; say(c, pick(BREAK_LINES.cooler)); }
+    if (c.next === 'coffee') { c.front = false; c.right = true; say(c, pick(L('coffee'))); }
+    else if (c.next === 'cooler') { c.front = true; c.right = true; say(c, pick(L('cooler'))); }
     else if (c.next === 'chat') {
       c.front = false; c.right = false; c.timer += 2;
-      say(c, c.a.vibe && Math.random() < 0.5 ? c.a.vibe : pick(['Got a sec?', 'Quick sync?', 'Can you look at this?', 'Lunch later?', 'Nice work on that!']), true);
+      say(c, lang === 'en' && c.a.vibe && Math.random() < 0.5 ? c.a.vibe : pick(L('chat')), true);
       if (c.with && c.with.state === 'work') c.with.reply = 1.8;
     } else { c.front = Math.random() < 0.5; c.right = Math.random() < 0.5; }
   }
   function step(c, dt) {
-    let rem = 1.7 * dt;
+    let rem = (mode === 'desk' && c.next === 'sit' ? 3.6 : 1.7) * dt;
     while (rem > 0 && c.path.length) {
       const [px, py] = c.path[0], dx = px - c.x, dy = py - c.y, d = Math.hypot(dx, dy);
       if (d < 1e-4) { c.path.shift(); continue; }
@@ -352,14 +408,14 @@
     for (const c of chars) {
       c.blink -= dt; if (c.blink < -0.13) c.blink = 2 + Math.random() * 4;
       if (c.bubble) { c.bt -= dt; if (c.bt <= 0) { c.bubble = null; bubbleCount--; } }
-      if (c.reply > 0) { c.reply -= dt; if (c.reply <= 0 && c.state === 'work') say(c, pick(['Sure, one sec', 'On it 👍', 'Ha, good one', 'Send me the link', 'After this commit']), true); }
-      if (reduce) continue;
+      if (c.reply > 0) { c.reply -= dt; if (c.reply <= 0 && c.state === 'work') say(c, pick(L('reply')), true); }
+      if (reduce && mode === 'normal') continue;
       if (c.state === 'work') {
         c.timer -= dt;
         if (!c.bubble && Math.random() < dt * 0.01) say(c, workLine(c));
-        if (c.timer <= 0 && c !== selected) leave(c);
+        if (c.timer <= 0 && c !== selected && mode !== 'desk') leave(c);
       } else if (c.state === 'walk') step(c, dt);
-      else if (c.state === 'stay') { c.timer -= dt; if (c.timer <= 0) goBack(c); }
+      else if (c.state === 'stay') { c.timer -= dt; if (c.timer <= 0) { if (mode === 'free') leave(c); else goBack(c); } }
     }
   }
 
@@ -437,15 +493,16 @@
 
     // screen-space overlays
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.textAlign = 'left'; ctx.direction = lang === 'fa' ? 'rtl' : 'ltr';
     const placed = [];
     for (const r of rooms) {
       const [ix, iy] = iso(r.x + r.W / 2, r.y, WALLH + 22);
       const [sx, sy] = toScreen(ix, iy);
       if (sx < -200 || sx > Wd + 200 || sy < -40 || sy > Hd + 40) continue;
-      const size = cam.z < 0.3 ? 11 : 13, half = (r.dv.label.length * size * 0.32 + 26);
+      const size = cam.z < 0.3 ? 11 : 13, half = (divLabel(r.dv).length * size * 0.32 + 26);
       if (placed.some((p) => Math.abs(p[0] - sx) < p[2] + half && Math.abs(p[1] - sy) < size + 12)) continue;
       placed.push([sx, sy, half]);
-      label(sx, sy, r.dv.label, r.agents.length, r.color, size);
+      label(sx, sy, divLabel(r.dv), r.agents.length, r.color, size);
     }
     if (cam.z > 0.5) {
       for (const c of hitList) if (c.bubble && (!filterSet || filterSet.has(c))) bubble(c);
@@ -455,20 +512,20 @@
     if (hover && hover !== selected && hitList.includes(hover) && selected && hitList.includes(selected)) nameTag(hover);
   }
   function label(x, y, text, n, color, size) {
-    ctx.font = `700 ${size}px "Bricolage Grotesque", "Trebuchet MS", sans-serif`;
-    const num = String(n);
+    ctx.font = `700 ${size}px "Bricolage Grotesque", "Vazirmatn", "Trebuchet MS", sans-serif`;
+    const numTxt = num(n);
     const w = ctx.measureText(text).width;
     ctx.font = `500 ${size - 2}px "JetBrains Mono", monospace`;
-    const nw = ctx.measureText(num).width;
+    const nw = ctx.measureText(numTxt).width;
     const W = w + nw + 32, H = size + 12;
     rr(x - W / 2, y - H / 2, W, H, H / 2, '#1C2532');
     circle(x - W / 2 + 11, y, 4, color);
     ctx.fillStyle = '#F9FBFC'; ctx.textBaseline = 'middle';
-    ctx.font = `700 ${size}px "Bricolage Grotesque", "Trebuchet MS", sans-serif`;
+    ctx.font = `700 ${size}px "Bricolage Grotesque", "Vazirmatn", "Trebuchet MS", sans-serif`;
     ctx.fillText(text, x - W / 2 + 20, y + 0.5);
     ctx.fillStyle = '#9FB0C2';
     ctx.font = `500 ${size - 2}px "JetBrains Mono", monospace`;
-    ctx.fillText(num, x - W / 2 + 26 + w, y + 0.5);
+    ctx.fillText(numTxt, x - W / 2 + 26 + w, y + 0.5);
   }
   function headScreen(c) {
     const [ix, iy] = iso(c.x, c.y);
@@ -489,7 +546,7 @@
   }
   function bubble(c) {
     const [x, y] = headScreen(c);
-    ctx.font = '500 12px "Figtree", system-ui, sans-serif';
+    ctx.font = '500 12px "Figtree", "Vazirmatn", system-ui, sans-serif';
     const lines = wrap(c.bubble, 170, 3);
     const w = Math.max(...lines.map((l) => ctx.measureText(l).width)) + 18, h = lines.length * 16 + 10;
     const bx = x - w / 2, by = y - h - 12;
@@ -505,7 +562,7 @@
   function nameTag(c) {
     const [x, y0] = headScreen(c);
     const y = y0 - (c.bubble && cam.z > 0.5 ? 0 : 0) + 4;
-    ctx.font = '600 13px "Figtree", system-ui, sans-serif';
+    ctx.font = '600 13px "Figtree", "Vazirmatn", system-ui, sans-serif';
     const text = `${c.a.emoji} ${c.a.name}`;
     const w = ctx.measureText(text).width + 20;
     const by = c.bubble && cam.z > 0.5 ? y + 34 * cam.z + 18 : y - 30;
@@ -577,6 +634,23 @@
   $('fit').onclick = () => { follow = null; updateFollowBtn(); flyTo(fitTo(boundsOf(-2, -2, world.w + 4, world.d + 4), 20)); };
   $('rnd').onclick = () => select(pick(chars));
 
+  // ---------- floor-wide modes: everyone to desks / free time ----------
+  let mode = 'normal';
+  function setMode(m) {
+    mode = mode === m ? 'normal' : m;
+    for (const b of document.querySelectorAll('[data-mode]')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    for (const c of chars) {
+      if (mode === 'desk') {
+        if (c.state === 'stay') c.timer = Math.random() * 1.2;
+        if (c.state !== 'work' && Math.random() < 0.15) say(c, pick(L('backToDesk')), true);
+      } else if (mode === 'free') {
+        if (c.state === 'work' && c !== selected) c.timer = Math.random() * 3;
+        if (c.state === 'work' && Math.random() < 0.12) say(c, pick(L('breakTime')), true);
+      } else if (c.state === 'work') c.timer = 6 + Math.random() * 25;
+    }
+  }
+  for (const b of document.querySelectorAll('[data-mode]')) b.onclick = () => setMode(b.dataset.mode);
+
   // ---------- dossier ----------
   const drawer = $('drawer');
   function select(c) {
@@ -587,7 +661,7 @@
     $('d-name').textContent = a.name;
     $('d-div').innerHTML = '';
     const dot = document.createElement('i'); dot.className = 'dot'; dot.style.background = dv.color; dot.style.marginRight = '0';
-    $('d-div').append(dot, document.createTextNode(dv.label));
+    $('d-div').append(dot, document.createTextNode(divLabel(dv)));
     $('d-vibe').textContent = a.vibe || '';
     $('d-vibe').hidden = !a.vibe;
     $('d-desc').textContent = a.description;
@@ -598,7 +672,7 @@
     md.querySelectorAll('a').forEach((l) => { l.target = '_blank'; l.rel = 'noopener'; });
     drawer.querySelector('.dbody').scrollTop = 0;
     drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
-    if (c.state === 'work') say(c, `Hi! 👋 ${a.emoji}`, true);
+    if (c.state === 'work') say(c, `${L('hi')} ${a.emoji}`, true);
     try { history.replaceState(null, '', '#' + a.id); } catch (_) { /* sandboxed */ }
     const [ix, iy] = iso(c.x, c.y);
     const z = Math.max(cam.z, 1.5);
@@ -610,7 +684,7 @@
     drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');
     try { history.replaceState(null, '', location.pathname + location.search); } catch (_) { /* sandboxed */ }
   }
-  function updateFollowBtn() { $('d-follow').textContent = follow ? 'Stop following' : 'Follow on the floor'; }
+  function updateFollowBtn() { $('d-follow').textContent = follow ? L('unfollow') : L('follow'); }
   $('d-close').onclick = closeDrawer;
   $('d-follow').onclick = () => { follow = follow ? null : selected; updateFollowBtn(); };
   addEventListener('keydown', (e) => {
@@ -627,8 +701,8 @@
       b.setAttribute('role', 'listitem');
       b.innerHTML = '<span class="sw"></span><span class="nm"></span><span class="n"></span>';
       b.querySelector('.sw').style.background = r.color;
-      b.querySelector('.nm').textContent = r.dv.label;
-      b.querySelector('.n').textContent = r.agents.length;
+      b.querySelector('.nm').textContent = divLabel(r.dv);
+      b.querySelector('.n').textContent = num(r.agents.length);
       b.onclick = () => { follow = null; updateFollowBtn(); flyTo(fitTo(boundsOf(r.x, r.y, r.W, r.D), 60, 0.42)); if (Wd <= 720) setExpanded(false); };
       list.append(b);
     }
@@ -641,21 +715,21 @@
     const scored = [];
     for (const c of chars) {
       const a = c.a, name = a.name.toLowerCase();
-      const hay = `${name} ${a.description} ${a.vibe} ${c.room.dv.label}`.toLowerCase();
+      const hay = `${name} ${a.description} ${a.vibe} ${c.room.dv.label} ${FA_DIV[c.room.dv.key] || ''}`.toLowerCase();
       if (!res.every((re) => re.test(hay))) continue;
       scored.push([res.every((re) => re.test(name)) ? 0 : 1, c]);
     }
     scored.sort((x, y) => x[0] - y[0] || x[1].a.name.localeCompare(y[1].a.name));
     filterSet = new Set(scored.map((x) => x[1]));
     list.innerHTML = '';
-    if (!scored.length) { const p = document.createElement('div'); p.className = 'empty'; p.textContent = `No agent matches “${q.value.trim()}”. Try a skill like “seo” or “unity”.`; list.append(p); return; }
+    if (!scored.length) { const p = document.createElement('div'); p.className = 'empty'; p.textContent = L('empty')(q.value.trim()); list.append(p); return; }
     for (const [, c] of scored.slice(0, 60)) {
       const b = document.createElement('button');
       b.setAttribute('role', 'listitem');
       b.innerHTML = '<span class="em"></span><span class="nm"><span></span><small></small></span><span class="sw"></span>';
       b.querySelector('.em').textContent = c.a.emoji;
       b.querySelector('.nm span').textContent = c.a.name;
-      b.querySelector('.nm small').textContent = c.room.dv.label;
+      b.querySelector('.nm small').textContent = divLabel(c.room.dv);
       b.querySelector('.sw').style.background = c.room.color;
       b.onclick = () => select(c);
       list.append(b);
@@ -663,8 +737,31 @@
   }
   q.addEventListener('input', runSearch);
   q.addEventListener('keydown', (e) => { if (e.key === 'Enter') { const first = list.querySelector('button'); if (first && filterSet) first.click(); } });
-  function setExpanded(v) { hud.classList.toggle('expanded', v); $('toggle').setAttribute('aria-expanded', String(v)); $('toggle').textContent = v ? 'Hide' : 'Divisions'; }
+  function setExpanded(v) { hud.classList.toggle('expanded', v); $('toggle').setAttribute('aria-expanded', String(v)); $('toggle').textContent = v ? L('hide') : L('divisions'); }
   $('toggle').onclick = () => setExpanded(!hud.classList.contains('expanded'));
+
+  // ---------- language switch ----------
+  function applyLang() {
+    const root = document.documentElement;
+    root.lang = lang; root.dir = lang === 'fa' ? 'rtl' : 'ltr';
+    for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = L(el.dataset.i18n);
+    for (const el of document.querySelectorAll('[data-i18n-ph]')) { el.placeholder = L(el.dataset.i18nPh); el.setAttribute('aria-label', L(el.dataset.i18nPh)); }
+    for (const el of document.querySelectorAll('[data-i18n-title]')) { el.title = L(el.dataset.i18nTitle); el.setAttribute('aria-label', L(el.dataset.i18nTitle)); }
+    const lb = $('lang'); lb.textContent = L('other'); lb.lang = lang === 'fa' ? 'en' : 'fa';
+    document.title = L('title');
+    if (chars.length) $('sub').textContent = L('sub')(num(chars.length), num(rooms.length));
+    setExpanded(hud.classList.contains('expanded'));
+    updateFollowBtn();
+    if (selected) { const d = $('d-div'); d.lastChild.textContent = divLabel(selected.room.dv); }
+    runSearch();
+    stats();
+  }
+  $('lang').onclick = () => {
+    lang = lang === 'fa' ? 'en' : 'fa';
+    try { localStorage.setItem('agency-hq-lang', lang); } catch (_) { /* storage blocked */ }
+    for (const c of chars) if (c.bubble) { c.bubble = null; bubbleCount--; }
+    applyLang();
+  };
 
   // ---------- stats ----------
   function stats() {
@@ -675,7 +772,7 @@
       else if (c.next === 'chat') ch++;
       else br++;
     }
-    $('s-work').textContent = w; $('s-walk').textContent = k; $('s-chat').textContent = ch; $('s-break').textContent = br;
+    $('s-work').textContent = num(w); $('s-walk').textContent = num(k); $('s-chat').textContent = num(ch); $('s-break').textContent = num(br);
   }
 
   // ---------- loop ----------
@@ -706,15 +803,17 @@
   // ---------- boot ----------
   resize();
   addEventListener('resize', resize);
+  applyLang();
   fetch('data/agents.json')
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((data) => {
       build(data);
-      $('sub').textContent = `${chars.length} specialists across ${rooms.length} divisions, at work right now.`;
+      applyLang();
       renderDivisions();
       $('loading').remove();
       Object.assign(cam, fitTo(boundsOf(-2, -2, world.w + 4, world.d + 4), 20));
       const deep = byId.get(decodeURIComponent(location.hash.slice(1)));
+      if (location.hash === '#fa' || location.hash === '#en') { try { localStorage.setItem('agency-hq-lang', lang); } catch (_) { /* storage blocked */ } }
       if (deep) select(deep);
       else {
         const eng = rooms.find((r) => r.dv.key === 'engineering') || rooms[0];
@@ -722,5 +821,5 @@
       }
       requestAnimationFrame((n) => { last = n; frame(n); });
     })
-    .catch((err) => { $('loading').textContent = `Could not load the agent roster (${err.message}). Reload the page to try again.`; });
+    .catch((err) => { $('loading').textContent = L('loadErr')(err.message); });
 })();
