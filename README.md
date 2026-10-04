@@ -8,6 +8,7 @@ An animated isometric office for **[The Agency](https://github.com/msitarzewski/
 - **Search** by name or skill (`/` focuses the search box), jump to any division, or visit a random agent
 - **Floor commands**: “All to desks” sends everyone back to their desk; “Free time” lets everyone loose. Press the active button again to return to the normal routine
 - **English and Persian (فارسی)** interface with full right-to-left layout; switch with the language button, or open `index.html#fa`
+- **Persian translations of every agent**: names, summaries and the full prompt (code blocks stay in English). The profile panel has a button to switch between the Persian text and the original. Generated with `scripts/merge-fa.py`
 - Drag to pan, scroll or pinch to zoom; works on phones; respects `prefers-reduced-motion`
 - Deep links: `index.html#engineering__engineering-frontend-developer` opens that agent
 
