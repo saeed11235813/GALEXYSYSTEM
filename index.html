@@ -130,6 +130,29 @@ html[lang="fa"] .sub, html[lang="fa"] .list button, html[lang="fa"] .modes butto
 .modes button:hover, .modes button:focus-visible { background: var(--chip); outline: none; }
 .modes button[aria-pressed="true"] { background: var(--ink); color: var(--panel-solid); }
 
+/* Task chat with an agent (server mode) */
+.task { border-top: 1px solid var(--line); padding-top: 12px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
+.task .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.task input, .task textarea {
+  width: 100%; min-width: 0; flex: 1; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-solid);
+  color: var(--ink); font: 400 14px/1.5 var(--f-body); padding: 9px 11px; resize: vertical;
+}
+.task input:focus-visible, .task textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.task button { font: 600 13px var(--f-body); padding: 8px 12px; border-radius: 9px; cursor: pointer; border: 1px solid var(--line); background: var(--panel-solid); color: var(--ink); }
+.task button.go { background: var(--accent); border-color: var(--accent); color: #fff; }
+.task button:disabled { opacity: .5; cursor: default; }
+.task .state { font: 500 12px var(--f-body); color: var(--muted); }
+.task .err { color: #B42318; margin: 0; font-size: 13px; }
+.chat { display: flex; flex-direction: column; gap: 8px; }
+.chat:empty { display: none; }
+.msg { border-radius: 12px; padding: 9px 12px; font-size: 14px; line-height: 1.6; min-width: 0; overflow-wrap: anywhere; }
+.msg.user { background: var(--chip); align-self: flex-end; max-width: 88%; white-space: pre-wrap; }
+.msg.agent { border: 1px solid var(--line); background: var(--panel-solid); }
+.msg.agent p:first-child { margin-top: 0; } .msg.agent p:last-child { margin-bottom: 0; }
+.msg.agent pre { background: var(--chip); padding: 8px 10px; border-radius: 8px; overflow-x: auto; direction: ltr; text-align: left; }
+.msg.agent code { font: 12.5px var(--f-mono); }
+.msg .meta { font: 500 11px var(--f-mono); color: var(--muted); margin-top: 6px; }
+
 /* Agent dossier */
 .drawer {
   top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px; bottom: calc(136px + env(safe-area-inset-bottom, 0px));
@@ -252,6 +275,24 @@ html[lang="fa"] .sub, html[lang="fa"] .list button, html[lang="fa"] .modes butto
       <button id="d-follow" type="button">Stop following</button>
       <button id="d-orig" type="button" hidden></button>
     </div>
+    <section class="task" id="d-task" hidden>
+      <div class="mdnote" data-i18n="taskTitle">Work with this agent</div>
+      <form class="login" id="d-login" hidden>
+        <label for="d-token" data-i18n="tokenPrompt">Enter the page password from your server to give agents work.</label>
+        <div class="row"><input id="d-token" type="password" autocomplete="current-password" dir="ltr"><button type="submit" data-i18n="tokenSave">Unlock</button></div>
+        <p class="err" id="d-login-err" hidden></p>
+      </form>
+      <div class="chat" id="d-chat" aria-live="polite"></div>
+      <form class="ask" id="d-form" hidden>
+        <textarea id="d-input" rows="3" dir="auto" data-i18n-ph="taskPh"></textarea>
+        <div class="row">
+          <button type="submit" class="go" id="d-send" data-i18n="send">Send</button>
+          <button type="button" id="d-stop" data-i18n="stop" hidden>Stop</button>
+          <button type="button" id="d-new" data-i18n="newChat">New conversation</button>
+          <span class="state" id="d-state"></span>
+        </div>
+      </form>
+    </section>
     <div class="mdnote" id="d-md-note" data-i18n="mdnote">Full agent prompt</div>
     <div class="md" id="d-md" dir="ltr"></div>
   </div>

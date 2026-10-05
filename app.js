@@ -31,6 +31,12 @@
       chat: ['Got a sec?', 'Quick sync?', 'Can you look at this?', 'Lunch later?', 'Nice work on that!'],
       reply: ['Sure, one sec', 'On it 👍', 'Ha, good one', 'Send me the link', 'After this commit'],
       backToDesk: ['On my way!', 'Back to work 💼', 'Coming!', 'Right away'],
+      busy: ['⚙️ Working on your task', 'Almost there…', 'Reading the files', 'Writing it up ✍️'],
+      taskTitle: 'Work with this agent', tokenPrompt: 'Enter the page password from your server to give agents work.', tokenSave: 'Unlock',
+      tokenBad: 'That password is not right. Check ACCESS_TOKEN in /etc/agency-hq.env on the server.', taskPh: 'Describe the task, e.g. “Review this API design…”',
+      send: 'Send', stop: 'Stop', newChat: 'New conversation', you: 'You',
+      st: { queued: 'Waiting for a free desk…', running: 'Working…', done: 'Done', error: 'Failed', stopped: 'Stopped' },
+      tools: (t) => `Used: ${t}`, failed: (e) => `The agent could not finish: ${e}`, netErr: 'Could not reach the server. Check that it is running.',
       breakTime: ['Break time! 🎉', 'Finally ☕', 'See you at the cooler', 'Stretch time 🙆'],
     },
     fa: {
@@ -50,6 +56,12 @@
       chat: ['یه لحظه وقت داری؟', 'یه هماهنگی سریع؟', 'می‌شه اینو ببینی؟', 'ناهار بریم؟', 'کارت عالی بود!'],
       reply: ['حتماً، یه لحظه', 'الان انجامش می‌دم 👍', 'هه، خوب بود', 'لینکشو بفرست', 'بعد از این کامیت'],
       backToDesk: ['دارم میام!', 'برگردیم سر کار 💼', 'اومدم!', 'همین الان'],
+      busy: ['⚙️ دارم روی کارت کار می‌کنم', 'تقریباً تمومه…', 'دارم فایل‌ها رو می‌خونم', 'دارم می‌نویسمش ✍️'],
+      taskTitle: 'کار دادن به این ایجنت', tokenPrompt: 'رمز صفحه (از سرورت) رو وارد کن تا بتونی به ایجنت‌ها کار بدی.', tokenSave: 'باز کردن',
+      tokenBad: 'رمز درست نیست. مقدار ACCESS_TOKEN رو توی فایل ‎/etc/agency-hq.env‎ روی سرور چک کن.', taskPh: 'کار رو توضیح بده، مثلاً «این طراحی API رو بررسی کن…»',
+      send: 'ارسال', stop: 'توقف', newChat: 'گفتگوی جدید', you: 'تو',
+      st: { queued: 'منتظر یه میز خالی…', running: 'در حال کار…', done: 'انجام شد', error: 'ناموفق', stopped: 'متوقف شد' },
+      tools: (t) => `ابزارها: ${t}`, failed: (e) => `ایجنت نتونست کار رو تموم کنه: ${e}`, netErr: 'به سرور وصل نشد. چک کن سرور روشن باشه.',
       breakTime: ['وقت استراحته! 🎉', 'بالاخره ☕', 'دم آب‌سردکن می‌بینمت', 'یه کم نرمش 🙆'],
     },
   };
@@ -224,6 +236,7 @@
     poly(lid, '#A9B2BE');
     const [lx, ly] = iso(dx, ry + 0.845, 22);
     const on = c.state === 'work';
+    if (c.busy && on) { ctx.globalAlpha = 0.35 + Math.sin(t * 6) * 0.15; const [gx, gy] = iso(dx, ry + 0.6, 24); circle(gx, gy, 16, color); ctx.globalAlpha = 1; }
     ctx.globalAlpha = on ? 0.65 + Math.sin(t * 2 + c.seed) * 0.25 : 0.25;
     circle(lx, ly, 2.2, color);
     ctx.globalAlpha = 1;
@@ -304,12 +317,12 @@
     const arm = shade(c.shirt, -0.14);
     // back arm
     ctx.fillStyle = arm;
-    if (seated) { const k = reduce ? 0 : Math.sin(t * 17 + c.seed) * 1.2; ctx.fillRect(-8.4, ty + 4, 3, 8 + k); circle(-6.9, ty + 12.5 + k, 1.8, c.skin); }
+    if (seated) { const k = reduce ? 0 : Math.sin(t * (c.busy ? 38 : 17) + c.seed) * 1.2; ctx.fillRect(-8.4, ty + 4, 3, 8 + k); circle(-6.9, ty + 12.5 + k, 1.8, c.skin); }
     else { ctx.fillRect(-8.6, ty + 3 - s * 1.5, 3, 9); circle(-7.1, ty + 12.5 - s * 1.5, 1.8, c.skin); }
     rr(-6.8, ty, 13.6, 14.5, 4.5, c.shirt);
     if (c.front) { ctx.fillStyle = c.room.color; ctx.fillRect(1.6, ty + 6, 3.2, 4); ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.fillRect(2.2, ty + 6.8, 2, 0.9); }
     ctx.fillStyle = arm;
-    if (seated) { const k = reduce ? 0 : Math.sin(t * 19 + c.seed + 1) * 1.2; ctx.fillRect(5.4, ty + 4, 3, 8 + k); circle(6.9, ty + 12.5 + k, 1.8, c.skin); }
+    if (seated) { const k = reduce ? 0 : Math.sin(t * (c.busy ? 41 : 19) + c.seed + 1) * 1.2; ctx.fillRect(5.4, ty + 4, 3, 8 + k); circle(6.9, ty + 12.5 + k, 1.8, c.skin); }
     else { ctx.fillRect(5.6, ty + 3 + s * 1.5, 3, 9); circle(7.1, ty + 12.5 + s * 1.5, 1.8, c.skin); }
 
     const hy = ty - 6.4;
@@ -424,11 +437,15 @@
       c.blink -= dt; if (c.blink < -0.13) c.blink = 2 + Math.random() * 4;
       if (c.bubble) { c.bt -= dt; if (c.bt <= 0) { c.bubble = null; bubbleCount--; } }
       if (c.reply > 0) { c.reply -= dt; if (c.reply <= 0 && c.state === 'work') say(c, pick(L('reply')), true); }
+      if (c.busy) {
+        if (c.state === 'stay') goBack(c);
+        if (c.state === 'work') { c.timer = Math.max(c.timer, 5); if (!c.bubble && Math.random() < dt * 0.12) say(c, pick(L('busy')), true); }
+      }
       if (reduce && mode === 'normal') continue;
       if (c.state === 'work') {
         c.timer -= dt;
         if (!c.bubble && Math.random() < dt * 0.01) say(c, workLine(c));
-        if (c.timer <= 0 && c !== selected && mode !== 'desk') leave(c);
+        if (c.timer <= 0 && c !== selected && !c.busy && mode !== 'desk') leave(c);
       } else if (c.state === 'walk') step(c, dt);
       else if (c.state === 'stay') { c.timer -= dt; if (c.timer <= 0) { if (mode === 'free') leave(c); else goBack(c); } }
     }
@@ -683,6 +700,7 @@
     $('d-src').href = REPO + a.path.split('/').map(encodeURIComponent).join('/');
     const md = $('d-md');
     renderBody(c);
+    renderTask(c);
     drawer.querySelector('.dbody').scrollTop = 0;
     drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
     if (!keepCam && c.state === 'work') say(c, `${L('hi')} ${a.emoji}`, true);
@@ -712,6 +730,98 @@
       apply();
     });
   }
+  // ---------- server mode: give agents real work ----------
+  let serverMode = false, token = '';
+  try { token = localStorage.getItem('agency-hq-token') || ''; } catch (_) { /* storage blocked */ }
+  const convs = new Map(); // agentId -> {sessionId, msgs: [{role, text, meta}], job, es}
+  const api = (p, opts = {}) => fetch('api/' + p, { ...opts, headers: { 'content-type': 'application/json', 'x-agency-token': token, ...(opts.headers || {}) } });
+  function conv(id) { if (!convs.has(id)) convs.set(id, { sessionId: null, msgs: [], job: null, es: null }); return convs.get(id); }
+  function mdHtml(text) {
+    if (window.marked && window.DOMPurify) return DOMPurify.sanitize(marked.parse(text || ''));
+    const d = document.createElement('div'); d.textContent = text || ''; return '<p style="white-space:pre-wrap">' + d.innerHTML + '</p>';
+  }
+  function renderTask(c) {
+    const box = $('d-task');
+    box.hidden = !serverMode;
+    if (!serverMode || c !== selected) return;
+    $('d-login').hidden = !!token; $('d-form').hidden = !token;
+    const cv = conv(c.a.id), chat = $('d-chat');
+    chat.innerHTML = '';
+    for (const m of cv.msgs) {
+      const el = document.createElement('div'); el.className = 'msg ' + m.role; el.dir = 'auto';
+      if (m.role === 'user') el.textContent = m.text; else el.innerHTML = mdHtml(m.text || '…');
+      if (m.meta) { const me = document.createElement('div'); me.className = 'meta'; me.textContent = m.meta; el.append(me); }
+      chat.append(el);
+    }
+    const st = cv.job ? cv.job.status : '';
+    const active = st === 'queued' || st === 'running';
+    $('d-state').textContent = st ? L('st')[st] || st : '';
+    $('d-send').disabled = active; $('d-stop').hidden = !active; $('d-new').hidden = !cv.msgs.length || active;
+  }
+  let paintQueued = false;
+  function repaintSoon(c) { if (paintQueued) return; paintQueued = true; requestAnimationFrame(() => { paintQueued = false; if (selected === c) renderTask(c); }); }
+  function follow2(c, job) {
+    const cv = conv(c.a.id), msg = cv.msgs[cv.msgs.length - 1];
+    if (cv.es) cv.es.close();
+    const es = new EventSource(`api/jobs/${job.id}/events?token=${encodeURIComponent(token)}`);
+    cv.es = es;
+    es.addEventListener('delta', (e) => { msg.text += JSON.parse(e.data).text; repaintSoon(c); });
+    es.addEventListener('tool', (e) => { msg.meta = L('tools')(JSON.parse(e.data).tools.join(', ')); repaintSoon(c); });
+    es.addEventListener('status', (e) => {
+      const j = JSON.parse(e.data); cv.job = j;
+      if (j.sessionId) cv.sessionId = j.sessionId;
+      c.busy = j.status === 'queued' || j.status === 'running';
+      if (j.status === 'error') msg.meta = L('failed')(j.error || '');
+      if (!c.busy) { es.close(); cv.es = null; if (j.status === 'done') say(c, '✅', true); }
+      repaintSoon(c);
+    });
+    es.onerror = () => { if (cv.job && (cv.job.status === 'done' || cv.job.status === 'error' || cv.job.status === 'stopped')) es.close(); };
+  }
+  $('d-login').addEventListener('submit', (e) => {
+    e.preventDefault();
+    token = $('d-token').value.trim();
+    api('auth').then((r) => {
+      if (!r.ok) { token = ''; $('d-login-err').textContent = L('tokenBad'); $('d-login-err').hidden = false; return; }
+      try { localStorage.setItem('agency-hq-token', token); } catch (_) { /* storage blocked */ }
+      $('d-login-err').hidden = true; if (selected) renderTask(selected); pollJobs();
+    }).catch(() => { $('d-login-err').textContent = L('netErr'); $('d-login-err').hidden = false; });
+  });
+  $('d-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const c = selected, task = $('d-input').value.trim();
+    if (!c || !task) return;
+    const cv = conv(c.a.id);
+    cv.msgs.push({ role: 'user', text: task }, { role: 'agent', text: '' });
+    $('d-input').value = '';
+    c.busy = true; cv.job = { status: 'queued' };
+    if (c.state !== 'work') goBack(c);
+    renderTask(c);
+    api('run', { method: 'POST', body: JSON.stringify({ agentId: c.a.id, task, sessionId: cv.sessionId }) })
+      .then((r) => r.json().then((j) => ({ ok: r.ok, j })))
+      .then(({ ok, j }) => {
+        if (!ok) { c.busy = false; cv.job = { status: 'error' }; cv.msgs[cv.msgs.length - 1].meta = j.error === 'bad_token' ? L('tokenBad') : L('failed')(j.error); if (j.error === 'bad_token') { token = ''; } renderTask(c); return; }
+        cv.job = j; follow2(c, j); renderTask(c);
+      })
+      .catch(() => { c.busy = false; cv.job = { status: 'error' }; cv.msgs[cv.msgs.length - 1].meta = L('netErr'); renderTask(c); });
+  });
+  $('d-input').addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $('d-form').requestSubmit(); } });
+  $('d-stop').onclick = () => { const cv = selected && conv(selected.a.id); if (cv && cv.job && cv.job.id) api(`jobs/${cv.job.id}/stop`, { method: 'POST' }); };
+  $('d-new').onclick = () => { if (!selected) return; convs.delete(selected.a.id); renderTask(selected); };
+  function pollJobs() {
+    if (!serverMode || !token) return;
+    api('jobs').then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (!d) return;
+      const busyIds = new Set(d.jobs.filter((j) => j.status === 'queued' || j.status === 'running').map((j) => j.agentId));
+      for (const c of chars) c.busy = busyIds.has(c.a.id);
+    }).catch(() => { /* server unreachable: keep last state */ });
+  }
+  setInterval(pollJobs, 4000);
+  fetch('api/health').then((r) => (r.ok ? r.json() : null)).then((h) => {
+    if (!h || h.server !== 'agency-hq') return;
+    serverMode = true; pollJobs();
+    if (selected) renderTask(selected);
+  }).catch(() => { /* static hosting: chat stays hidden */ });
+
   function closeDrawer() {
     selected = null; follow = null;
     drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');

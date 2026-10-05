@@ -21,6 +21,26 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
+## Run the agents for real on your own server
+
+`server/` turns the office into a working agency: click an agent, describe a task, and it runs
+through **Claude Code signed in with your Claude subscription** (no API key). Replies stream into the
+profile panel, the agent sits typing at its desk while it works, and follow-ups continue the same
+conversation. Each agent gets its own workspace folder on the server.
+
+On a fresh Ubuntu server, as root:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/saeed11235813/GALEXYSYSTEM/claude/intelligent-mccarthy-11sbxr/server/install.sh | bash
+sudo -u agency claude setup-token      # sign in, copy the token it prints
+nano /etc/agency-hq.env                # paste it after CLAUDE_CODE_OAUTH_TOKEN=
+systemctl restart agency-hq
+```
+
+Then open `http://<server-ip>:8080` and enter the page password (`ACCESS_TOKEN` in `/etc/agency-hq.env`).
+Settings in that file: `MAX_JOBS` (parallel agents, default 2), `ALLOW_BASH` (shell access, off by default).
+Subscription usage is for your own personal use; serving other people needs the Claude API.
+
 ## Refresh the roster
 
 `data/agents.json` is generated from a checkout of the agents repo:
